@@ -10,10 +10,11 @@ var dt = dateTime.create();
 var datetimeF = dt.format('YmdHMS');
 
 var con = mysql.createConnection({
-  host: "localhost",
+  host: "127.0.0.1",
   user: "root",
   password: "admin",
-  database: "wmsdb"
+  database: "wmsdb",
+  port:"3306"
 });
 
 con.connect(function(err) {
