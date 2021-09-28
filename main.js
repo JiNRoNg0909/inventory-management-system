@@ -38,7 +38,8 @@ app.use(session({
 
 
 app.get('/', function(request, response) {
-	response.sendFile(path.join(__dirname + '/index.html'));
+	//response.sendFile(path.join(__dirname + '/index.html'));
+	response.render(path.join(__dirname + '/client/index.html'));
 });
 app.get('/homepage', function(request, response) {
 	
@@ -320,4 +321,4 @@ app.post('/deleteItem', function(request, response) {
 
 
 
-app.listen(3000);
+app.listen(8080);
