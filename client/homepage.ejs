@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet" href="/mainpage.css" type="text/css" />
+
+ <!-- Boxicons CDN Link -->
+ <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+ <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" 
+ crossorigin="anonymous"/>
+<title>home page</title>
+
+</head>
+<style>
+.sidebar .bx-log-out:hover{
+  color: red;
+}
+
+</style>
+
+
+
+<body>
+
+ <div class="sidebar">
+    <div class="logo-details">
+       <i class='bx bxs-label icon'></i>
+        <div class="logo_name">WMS</div>
+        <i class='bx bx-menu' id="btn" ></i>
+    </div>
+    <ul class="nav-list">
+   
+      <li>
+        <a href="addinfo">
+          <i class='bx bxs-add-to-queue'></i>
+          <span class="links_name">Add Item</span>
+        </a>
+         <span class="tooltip">Add Item</span>
+      </li>
+
+
+<li>
+        <a href="searchinfo">
+          <i class='bx bx-search-alt' ></i>
+          <span class="links_name">Search Item</span>
+        </a>
+         <span class="tooltip">Search Item</span>
+      </li>
+
+
+
+       <li class="profile">
+        <div class="profile-details">
+          <!--<img src="profile.jpg" alt="profileImg">-->
+          <div class="name_job">
+            <div class="name"><%=userid%></div>
+            <div class="job"><%=job%></div>
+          </div>
+        </div>
+        <i class='bx bx-log-out' onclick="location.href ='index.html';" id="log_out" ></i>
+    </li>
+
+    </ul>
+  </div>
+
+
+  <section class="home-section">
+     
+      <div class="topnav">
+        <a class="floatleft" href="homepage">
+                    <img src="https://cdn.shopify.com/s/files/1/0467/8660/9318/files/Tokimeku_Tag_Tokimeku_Logo_480x480.png?v=1620028225" class="paddingimg" alt="tokimeku" style="width:200px;height:75px;">
+                  </a>
+
+        <p class="floatleft">WMS Home</p>
+    
+        </div>
+
+        <div class="container">
+          <a href="addinfo">
+          <div class="box">
+            <div class="icon"><i class="fas fa-plus-square"></i></div>
+            <div class="content">
+            <h3>Add</h3>
+            <p>Add Items</p>
+          </div>
+          </div>
+        </a>
+        <a href="updateinfo">
+          <div class="box">
+            <div class="icon"><i class="fas fa-edit"></i></div>
+            <div class="content">
+            <h3>Update</h3>
+            <p>Update Items</p>
+          </div>
+        </div>
+        </a>
+        <a href="searchinfo">
+        <div class="box">
+          <div class="icon"><i class="fas fa-search"></i></div>
+            <div class="content">
+          <h3>Search</h3>
+          <p>Search Items</p>
+          </div>
+        </div>
+      </a>
+      <a href="deleteitem">
+        <div class="box">
+          <div class="icon"><i class="fas fa-minus-square"></i></div>
+            <div class="content">
+          <h3>Delete</h3>
+          <p>Delete Items</p>
+          </div>
+        </div>
+      </a>
+
+        </div>
+  </section>
+
+</body>
+
+<script>
+let sidebar = document.querySelector(".sidebar");
+let closeBtn = document.querySelector("#btn");
+let searchBtn = document.querySelector(".bx-search");
+
+closeBtn.addEventListener("click", ()=>{
+  sidebar.classList.toggle("open");
+  menuBtnChange();//calling the function(optional)
+});
+
+searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
+  sidebar.classList.toggle("open");
+  menuBtnChange(); //calling the function(optional)
+});
+
+// following are the code to change sidebar button(optional)
+function menuBtnChange() {
+ if(sidebar.classList.contains("open")){
+   closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+ }else {
+   closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
+ }
+}
+
+
+</script>
+
+
+
+
+</html>

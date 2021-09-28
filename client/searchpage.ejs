@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet" href="/searchpage.css" type="text/css" />
+
+ <!-- Boxicons CDN Link -->
+ <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+ <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" 
+ crossorigin="anonymous"/>
+
+<title>Search Item</title>
+
+</head>
+<style>
+.sidebar .bx-log-out:hover{
+  color: red;
+}
+
+</style>
+
+
+
+<body>
+
+ <div class="sidebar">
+    <div class="logo-details">
+       <i class='bx bxs-label icon'></i>
+        <div class="logo_name">WMS</div>
+        <i class='bx bx-menu' id="btn" ></i>
+    </div>
+    <ul class="nav-list">
+   
+      <li>
+        <a href="addinfo">
+          <i class='bx bxs-add-to-queue'></i>
+          <span class="links_name">Add Item</span>
+        </a>
+         <span class="tooltip">Add Item</span>
+      </li>
+
+
+<li>
+        <a href="searchinfo">
+          <i class='bx bx-search-alt' ></i>
+          <span class="links_name">Search Item</span>
+        </a>
+         <span class="tooltip">Search Item</span>
+      </li>
+
+
+
+       <li class="profile">
+        <div class="profile-details">
+          <!--<img src="profile.jpg" alt="profileImg">-->
+          <div class="name_job">
+            <div class="name"><%=userid%></div>
+            <div class="job"><%=job%></div>
+          </div>
+        </div>
+        <i class='bx bx-log-out' onclick="location.href ='index.html';" id="log_out" ></i>
+    </li>
+
+    </ul>
+  </div>
+
+
+  <section class="home-section">
+     
+      <div class="topnav">
+        <a class="floatleft" href="homepage">
+                    <img src="https://cdn.shopify.com/s/files/1/0467/8660/9318/files/Tokimeku_Tag_Tokimeku_Logo_480x480.png?v=1620028225" class="paddingimg" alt="tokimeku" style="width:200px;height:75px;">
+                  </a>
+
+        <p class="floatleft">Search Item</p>
+    
+        </div>
+        <% if(message.length > 0){ %>
+          <div class="alertmessage">
+           <p> <%=message%></p>
+          </div>
+        <%}%>
+        <% if(error.length > 0){ %>
+          <div class="alerterror">
+           <p> <%=error%></p>
+          </div>
+        <%}%>
+       
+        <div class="container">
+         
+            <form name="" action="searchItem" method ="post">
+                Item ID :<input type="text" name="itemID" placeholder="itemID"  /><br>
+                Category :
+                               
+                <label class="select" for="slct">
+                    <select name="category" id="category" >
+                      <option value="" disabled="disabled" selected="selected">Select option</option>
+                      <option value="Office Furniture">Office Furniture</option>
+                      <option value="Security, Health & Safety Items">Security, Health & Safety Items</option>
+                      <option value="Office Equipment">Office Equipment</option>
+                      <option value="Computers & Accessories">Computers & Accessories</option>              
+                      <option value="Machines & Tools">Machines & Tools</option>
+                    </select>
+                   
+                
+              <br>
+                       
+                
+                <input type="submit" value="Search">
+               
+                
+                <input type="submit"  onclick="homepage" value="Back">
+                
+                </form>
+               
+                  <br>
+                 
+        </div>
+        <table id="result">
+            <tr>
+              <th>ItemID</th>
+              <th>Category</th>
+              <th>Remark</th>
+              <th>User</th>
+              <th>Date time</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+           <% if(results.length > 0){
+            for(var i=0; i<results.length; i++){
+           
+            %>
+
+            <tr>
+                
+                <td><%=results[i].itemid%></td>
+                <td><%=results[i].category%></td>
+                <td><%=results[i].remark%></td>
+                <td><%=results[i].user%></td>
+                <td><%=results[i].datetime%></td>
+                <td>
+                <form name="" action="passtoUpdate" method ="post">
+                  <button class="btnclass"name="itemid" type="submit" value=<%=results[i].itemid%>>Edit</button>
+                </form>
+                </td>
+                <td>
+                  <form name="" action="passtoDelete" method ="post">
+                  <button class="btnclass"name="itemid" type="submit" value="<%=results[i].itemid%>">Delete</button>
+                  </form>
+                  </td>
+            </tr>
+
+
+
+          <%}}%>
+          </table>
+       
+  </section>
+
+</body>
+
+<script>
+let sidebar = document.querySelector(".sidebar");
+let closeBtn = document.querySelector("#btn");
+let searchBtn = document.querySelector(".bx-search");
+
+closeBtn.addEventListener("click", ()=>{
+  sidebar.classList.toggle("open");
+  menuBtnChange();//calling the function(optional)
+});
+
+searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
+  sidebar.classList.toggle("open");
+  menuBtnChange(); //calling the function(optional)
+});
+
+// following are the code to change sidebar button(optional)
+function menuBtnChange() {
+ if(sidebar.classList.contains("open")){
+   closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+ }else {
+   closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
+ }
+}
+
+
+</script>
+
+
+    
+
+
+</html>
