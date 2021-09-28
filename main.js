@@ -320,4 +320,5 @@ app.post('/deleteItem', function(request, response) {
 
 
 
-app.listen(8080);
+let port = process.env.PORT || 8080;
+app.listen(port, () => console.log('Listening on port ${port}!'));
