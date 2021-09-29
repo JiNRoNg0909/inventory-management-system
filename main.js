@@ -83,6 +83,16 @@ app.get('/homepage', function(request, response) {
 	});
 	
 });
+app.post('/homepage', function(request, response) {
+	
+	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
+	response.render(path.join(__dirname + '/client/homepage.ejs'), {
+		userid: request.session.userid,
+		job: request.session.job
+	});
+	
+});
+
 
 app.get('/addinfo', function(request, response) {
 	
@@ -270,7 +280,7 @@ app.post('/updateItem', function(request, response) {
 	var remark = request.body.remarks;
 	var user = request.session.userid;
 	
-	con.query('update iteminfo set category=?, remark=?, user=?, datetime=? where itemid=?', [selectCategory, remark, user, datetimeF,itemid], function(error, results, fields) {	
+	con.query('update iteminfo set category=?, remark=?, userid=?, datetime=? where itemid=?', [selectCategory, remark, user, datetimeF,itemid], function(error, results, fields) {	
 		if (error) throw error;
 		
 			if (results.affectedRows > 0) {
