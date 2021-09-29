@@ -10,15 +10,15 @@ var dt = dateTime.create();
 var datetimeF = dt.format('YmdHMS');
 
 var con = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "admin",
-  database: "wmsdb",
-  port:"3306"
+  host: "us-cdbr-east-04.cleardb.com",
+  user: "bf8126e1f41f22",
+  password: "b068746b",
+  database: "heroku_c3cc640fbd5f68c"
+  
 });
 
 con.connect(function(err) {
-	//if (err) throw err;
+	if (err) throw err;
 	console.log("Connected!");
   });
  
