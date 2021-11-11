@@ -88,10 +88,8 @@
        
         <div class="container">
          
-            <form name="" action="searchItem" method ="post">
-             
-           
-                Item ID :<input type="text" id="itemID" name="itemID" onchange="passValue()" placeholder="itemID"  /><br>
+            <form name="" action="printexcel" method ="post">
+                Item ID :<input type="text" name="itemID" placeholder="itemID"  /><br>
                 Category :
                                
                 <label class="select" for="slct">
@@ -108,11 +106,11 @@
               <br>
                        
                 
-                <input type="submit" value="Search">
+                <input type="submit" value="Printinfo">
    
                 </form>
                 <form name="" action="homepage" method ="get">
-                  <input type="submit"  onclick="homepage" value="Back">
+                  <input type="submit"  value="Back">
                   </form>
 
                
@@ -125,11 +123,8 @@
           %>
              
        
-        <table id="result">
-          <form name="" action="printexcel" method ="post">
-            
-            <input type="submit"  value="Download Excel">
-          </form>
+        <table name="result" id="result">
+        
             <tr>
               <th>ItemID</th>
               <th>Category</th>
@@ -174,15 +169,6 @@
 </body>
 
 <script>
-
-function passValue(){
-  const input = document.getElementById('itemID');
-  const output = document.getElementById('outItemID');
-
-  // Trying to insert text into 'output'.
-  output.value = input.value;
-}
-
 let sidebar = document.querySelector(".sidebar");
 let closeBtn = document.querySelector("#btn");
 let searchBtn = document.querySelector(".bx-search");
@@ -205,7 +191,6 @@ function menuBtnChange() {
    closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
  }
 }
-
 
 
 </script>

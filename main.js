@@ -4,24 +4,24 @@ var express = require('express');
 var path = require('path');
 var session = require('express-session');
 var flash = require('connect-flash');
+var xlsx = require('xlsx');
+var mime = require('mime');
+var exceljs = require('exceljs');
 
 var dateTime = require('node-datetime');
+const { write } = require('fs');
 var dt = dateTime.create();
 var datetimeF = dt.format('YmdHMS');
 
-var con = mysql.createConnection({
-  host: "us-cdbr-east-04.cleardb.com",
-  user: "bf8126e1f41f22",
-  password: "b068746b",
-  database: "heroku_c3cc640fbd5f68c"
-  
-});
 db_config = {
 	host: "us-cdbr-east-04.cleardb.com",
   user: "bf8126e1f41f22",
   password: "b068746b",
   database: "heroku_c3cc640fbd5f68c"
 }
+
+var con = mysql.createConnection({db_config});
+
 //con.connect(function(err) {
 //	if (err) throw err;
 //	console.log("Connected!");
@@ -83,15 +83,7 @@ app.get('/homepage', function(request, response) {
 	});
 	
 });
-app.post('/homepage', function(request, response) {
-	
-	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
-	response.render(path.join(__dirname + '/client/homepage.ejs'), {
-		userid: request.session.userid,
-		job: request.session.job
-	});
-	
-});
+
 
 
 app.get('/addinfo', function(request, response) {
@@ -140,7 +132,17 @@ app.get('/deleteinfo', function(request, response) {
 	});
 });
 
-
+app.get('/downloadinfo', function(request, response) {
+	
+	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
+	response.render(path.join(__dirname + '/client/downloadinfo.ejs'), {
+		error: request.flash('error'),
+		message : request.flash('message'),
+		results: request.flash('results'),
+		userid: request.session.userid,
+		job: request.session.job
+	});
+});
 
 
 
@@ -223,7 +225,7 @@ app.post('/searchItem', function(request, response) {
 			//	var job = results[0].job;
 				
 				
-
+				request.session.resultspass = results;
 				request.flash('results', results);
 				response.redirect('searchinfo');
 
@@ -358,9 +360,258 @@ app.post('/deleteItem', function(request, response) {
 
 });
 
+/*
+app.post('/printexcel', function(request, response) {
+
+	var results = request.session.resultspass;
+	
+		con.query('SELECT * FROM iteminfo WHERE itemid = ? or category = ?', [itemid, selectCategory], function(error, results, fields) {	
+		if (error) throw error;
+		
+			if (results.length > 0) {
+				
+				
+				
+				
+			
+				const wb = new exceljs.Workbook();
+				const ws = wb.addWorksheet("Warehouse List");
+
+				const imageId = wb.addImage({
+					filename: 'tokimekuimg.png',
+					extension: 'png',
+				  });
+			    ws.addImage(imageId, 'A1:D5');
+
+				ws.mergeCells('A7:C7');
+				ws.getCell('A7').value = "INVENTORY LIST  -  TOKIMEKU PRECISION ENGINEERING";
+				ws.getCell('A7').font ={bold:true, size:16, underline:true};
+
+				ws.getRow(9).values = ['Item', 'Description', 'Barcode', 'Remarks'];
+				ws.getRow(9).font = { bold: true,size:15 };
+				
+				var borderStyles = {
+					top: { style: "thin" },
+					left: { style: "thin" },
+					bottom: { style: "thin" },
+					right: { style: "thin" }
+				  };
+
+				ws.getRow(9).eachCell({ includeEmpty: false }, function(row, rowNumber) {
+					row.border = borderStyles;
+					row.fill = {
+						type: 'pattern',
+						pattern:'solid',
+						fgColor:{argb:'F08080'},
+					  };
+					  
+				  });
+
+				
+
+				ws.columns = [
+					{ key: 'Item',width:10,border:true},
+					{ key: 'Description',width:30},
+					{ key: 'Barcode', width:30},
+					{ key: 'Remarks',width:30}
+					];
+
+				var k=10;
+				for(var i = 1; i<=results.length; i++){
+					
+					
+					ws.addRow({Item: i, Description: results[i-1].itemid, Remarks: results[i-1].remark});				
+					ws.getRow(k).eachCell({ includeEmpty: false }, function(row, rowNumber) {
+						row.border = borderStyles;
+											  
+					  });
+					  k++;
+
+				}
+			
+				ws.getCell("A"+ (k+15)).value = "SYSTEM GENERATED";
+				ws.getCell("A"+ (k+15)).font ={bold:true, size:16};
+
+
+				// response headers
+				response.set({
+				  'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+				  'Content-Disposition': `attachment; filename="newdatatest.xlsx"`,
+				});
+				
+				// write into response
+				wb.xlsx.write(response);
+
+
+				
+
+				const file = __dirname +"/newdatatest.xlsx";
+				const filename = path.basename(file);
+				const mimeType = mime.getType(file);
+				//const mimeType = "application/vnd.ms-excel";
+				console.log(filename);
+				console.log(mimeType);
+				
+				response.setHeader("Content-Type", mimeType);
+				response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+				response.download(file);
+
+				//response.redirect('downloadinfo');
+
+			
+			}
+			else{
+					response.redirect('searchinfo');
+					
+				}
+						
+			//response.end();
+			
+		});
+
+});
+
+*/
+
+app.post('/printexcel', function(request, response) {
+
+	var results = request.session.resultspass;
+
+				//console.log(results);
+				const wb = new exceljs.Workbook();
+				const ws = wb.addWorksheet("Warehouse List");
+
+				const imageId = wb.addImage({
+					filename: 'tokimekuimg.png',
+					extension: 'png',
+				  });
+			    ws.addImage(imageId, 'A1:D5');
+
+				ws.mergeCells('A7:C7');
+				ws.getCell('A7').value = "INVENTORY LIST  -  TOKIMEKU PRECISION ENGINEERING";
+				ws.getCell('A7').font ={bold:true, size:16, underline:true};
+
+				ws.getRow(9).values = ['Item', 'Description', 'Barcode', 'Remarks'];
+				ws.getRow(9).font = { bold: true,size:15 };
+				
+				var borderStyles = {
+					top: { style: "thin" },
+					left: { style: "thin" },
+					bottom: { style: "thin" },
+					right: { style: "thin" }
+				  };
+
+				ws.getRow(9).eachCell({ includeEmpty: false }, function(row, rowNumber) {
+					row.border = borderStyles;
+					row.fill = {
+						type: 'pattern',
+						pattern:'solid',
+						fgColor:{argb:'F08080'},
+					  };
+					  
+				  });
+
+				
+
+				ws.columns = [
+					{ key: 'Item',width:10,border:true},
+					{ key: 'Description',width:30},
+					{ key: 'Barcode', width:30},
+					{ key: 'Remarks',width:30}
+					];
+
+				var k=10;
+				for(var i = 1; i<=results.length; i++){
+					
+					
+					ws.addRow({Item: i, Description: results[i-1].itemid, Remarks: results[i-1].remark});				
+					ws.getRow(k).eachCell({ includeEmpty: false }, function(row, rowNumber) {
+						row.border = borderStyles;
+											  
+					  });
+					  k++;
+
+				}
+			
+				ws.getCell("A"+ (k+15)).value = "SYSTEM GENERATED";
+				ws.getCell("A"+ (k+15)).font ={bold:true, size:16};
+
+
+				// response headers
+				response.set({
+				  'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+				  'Content-Disposition': `attachment; filename="newdatatest.xlsx"`,
+				});
+				
+				// write into response
+				wb.xlsx.write(response);
+				delete request.session.resultspass;
+				
+
+			
+		});
 
 
 
+
+
+
+
+/*
+function createExcel(results){
+	var count = 1;
+
+	var wb = xlsx.readFile("List_Inventory.xlsx",{cellStyles:true});
+	var ws = wb.Sheets["list"];
+	//var data = xlsx.utils.sheet_to_json(ws,{		
+	//	range:"A7:G13"
+	//});
+
+	var data = xlsx.utils.sheet_to_json(ws,{
+		range:"A7:G40"
+	});
+	console.log(data);
+
+	var newdata = data.map(function(record){
+		record.Item = count++;
+		//record.Description = itemid;
+		//record.Category = selectCategory;
+		//record.Remarks = remark;
+		record.Barcode = results[0].remark;
+		return record;
+		 
+	});
+	console.log(newdata);
+
+	var newWB = xlsx.utils.book_new();
+	var newWS = xlsx.utils.json_to_sheet(newdata,{
+		range:"A7:G40"
+	});
+	xlsx.utils.book_append_sheet(newWB,newWS,"newsheetdate");
+	xlsx.writeFile(newWB, "newdatatest.xlsx");
+}
+
+
+function createExcel(results){
+	
+	const wb = new exceljs.Workbook();
+	//const wb = createAndFillWorkbook();
+
+	
+
+	const ws = wb.addWorksheet('list');
+	ws.getCell('A2').fill = {
+		type: 'pattern',
+		pattern:'darkTrellis',
+		fgColor:{argb:'FFFFFF00'},
+		bgColor:{argb:'FF0000FF'}
+	  };
+
+	const writefile =  wb.xlsx.writeFile("newdatatest.xlsx");
+	return writefile;
+
+}
+*/
 
 let port = process.env.PORT || 8080;
 app.listen(port, () => console.log('Listening on port ' + port));
