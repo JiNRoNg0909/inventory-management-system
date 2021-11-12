@@ -14,10 +14,11 @@ var dt = dateTime.create();
 var datetimeF = dt.format('YmdHMS');
 
 db_config = {
-	host: "us-cdbr-east-04.cleardb.com",
-  user: "bf8126e1f41f22",
-  password: "b068746b",
-  database: "heroku_c3cc640fbd5f68c"
+	host: "tpe.c5h4fcntitgg.ap-southeast-1.rds.amazonaws.com",
+  user: "admin",
+  password: "adminadmin",
+  database: "tpewms",
+  port: 3306
 }
 
 var con = mysql.createConnection({db_config});
@@ -183,10 +184,11 @@ app.post('/auth', function(request, response) {
 app.post('/insertItem', function(request, response) {
 	var itemid = request.body.itemID;
 	var selectCategory = request.body.category;
+	var selectLocation = request.body.location;
 	var remark = request.body.remarks;
 	
 
-		con.query("INSERT INTO iteminfo VALUES (?,?,?,?,?);", [itemid, selectCategory,remark,request.session.userid,datetimeF], function(error, results, fields) {	
+		con.query("INSERT INTO iteminfo VALUES (?,?,?,?,?,?);", [itemid, selectCategory,remark,request.session.userid,datetimeF,selectLocation], function(error, results, fields) {	
 		if (error) {
 		
 		request.flash('error', 'Something Wrong');
@@ -213,9 +215,9 @@ app.post('/insertItem', function(request, response) {
 app.post('/searchItem', function(request, response) {
 	var itemid = request.body.itemID;
 	var selectCategory = request.body.category;
+	var selectLocation = request.body.location;
 	
-	
-		con.query('SELECT * FROM iteminfo WHERE itemid = ? or category = ?', [itemid, selectCategory], function(error, results, fields) {	
+		con.query('SELECT * FROM iteminfo WHERE itemid = ? or category = ? or location =?', [itemid, selectCategory,selectLocation], function(error, results, fields) {	
 		if (error) throw error;
 		
 			if (results.length > 0) {
@@ -250,6 +252,7 @@ app.post('/searchItem', function(request, response) {
 app.post('/passtoUpdate', function(request, response) {
 	var itemid = request.body.itemid;
 	var selectCategory = request.body.category;
+	var selectLocation = request.body.location;
 	var remark = request.body.remarks;
 	
 	
@@ -279,10 +282,11 @@ app.post('/passtoUpdate', function(request, response) {
 app.post('/updateItem', function(request, response) {
 	var itemid = request.body.itemID;
 	var selectCategory = request.body.category;
+	var selectLocation = request.body.location;
 	var remark = request.body.remarks;
 	var user = request.session.userid;
 	
-	con.query('update iteminfo set category=?, remark=?, userid=?, datetime=? where itemid=?', [selectCategory, remark, user, datetimeF,itemid], function(error, results, fields) {	
+	con.query('update iteminfo set category=?, remark=?, userid=?, datetime=?, location=? where itemid=?', [selectCategory, remark, user, datetimeF, selectLocation, itemid], function(error, results, fields) {	
 		if (error) throw error;
 		
 			if (results.affectedRows > 0) {
@@ -307,8 +311,6 @@ app.post('/updateItem', function(request, response) {
 
 app.post('/passtoDelete', function(request, response) {
 	var itemid = request.body.itemid;
-	var selectCategory = request.body.category;
-	var remark = request.body.remarks;
 	
 	
 	con.query('SELECT * FROM iteminfo WHERE itemid = ?', [itemid], function(error, results, fields) {	
@@ -491,7 +493,7 @@ app.post('/printexcel', function(request, response) {
 				ws.getCell('A7').value = "INVENTORY LIST  -  TOKIMEKU PRECISION ENGINEERING";
 				ws.getCell('A7').font ={bold:true, size:16, underline:true};
 
-				ws.getRow(9).values = ['Item', 'Description', 'Barcode', 'Remarks'];
+				ws.getRow(9).values = ['Item', 'Description', 'Location', 'Remarks'];
 				ws.getRow(9).font = { bold: true,size:15 };
 				
 				var borderStyles = {
@@ -516,7 +518,7 @@ app.post('/printexcel', function(request, response) {
 				ws.columns = [
 					{ key: 'Item',width:10,border:true},
 					{ key: 'Description',width:30},
-					{ key: 'Barcode', width:30},
+					{ key: 'Location', width:30},
 					{ key: 'Remarks',width:30}
 					];
 
@@ -524,7 +526,7 @@ app.post('/printexcel', function(request, response) {
 				for(var i = 1; i<=results.length; i++){
 					
 					
-					ws.addRow({Item: i, Description: results[i-1].itemid, Remarks: results[i-1].remark});				
+					ws.addRow({Item: i, Description: results[i-1].itemid, Location: results[i-1].location, Remarks: results[i-1].remark});				
 					ws.getRow(k).eachCell({ includeEmpty: false }, function(row, rowNumber) {
 						row.border = borderStyles;
 											  

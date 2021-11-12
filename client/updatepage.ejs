@@ -144,6 +144,126 @@
                    
                 
               <br>
+
+              Location :
+                               
+              <label class="select" for="slct">
+                  <select name="location" id="location" required="required">
+                    <%if(results[0].location=="GF-Room1"){%>
+                    <option value="" disabled="disabled">Select option</option>
+                    <option value="GF-Room1" selected="selected">GF-Room1</option>
+                    <option value="GF-Room2">GF-Room2</option>
+                    <option value="GF-Store">GF-Store</option>
+                    <option value="Production Area">Production Area</option>              
+                    <option value="FF-Room1">FF-Room1</option>
+                    <option value="FF-Room2">FF-Room2</option>
+                    <option value="FF-Room3">FF-Room3</option>
+                    <option value="FF-Room4">FF-Room4</option>
+                    <option value="Others">Others</option>
+
+                    <%} else if(results[0].location=="GF-Room2"){%>
+                      <option value="" disabled="disabled">Select option</option>
+                      <option value="GF-Room1">GF-Room1</option>
+                      <option value="GF-Room2" selected="selected">GF-Room2</option>
+                      <option value="GF-Store">GF-Store</option>
+                      <option value="Production Area">Production Area</option>              
+                      <option value="FF-Room1">FF-Room1</option>
+                      <option value="FF-Room2">FF-Room2</option>
+                      <option value="FF-Room3">FF-Room3</option>
+                      <option value="FF-Room4">FF-Room4</option>
+                      <option value="Others">Others</option>
+
+                      <%} else if(results[0].location=="GF-Store"){%>
+                        <option value="" disabled="disabled">Select option</option>
+                        <option value="GF-Room1">GF-Room1</option>
+                        <option value="GF-Room2">GF-Room2</option>
+                        <option value="GF-Store" selected="selected">GF-Store</option>
+                        <option value="Production Area">Production Area</option>              
+                        <option value="FF-Room1">FF-Room1</option>
+                        <option value="FF-Room2">FF-Room2</option>
+                        <option value="FF-Room3">FF-Room3</option>
+                        <option value="FF-Room4">FF-Room4</option>
+                        <option value="Others">Others</option>
+
+                        <%} else if(results[0].location=="Production Area"){%>
+                          <option value="" disabled="disabled">Select option</option>
+                          <option value="GF-Room1">GF-Room1</option>
+                          <option value="GF-Room2">GF-Room2</option>
+                          <option value="GF-Store">GF-Store</option>
+                          <option value="Production Area" selected="selected">Production Area</option>              
+                          <option value="FF-Room1">FF-Room1</option>
+                          <option value="FF-Room2">FF-Room2</option>
+                          <option value="FF-Room3">FF-Room3</option>
+                          <option value="FF-Room4">FF-Room4</option>
+                          <option value="Others">Others</option>
+
+                          <%} else if(results[0].location=="FF-Room1"){%>
+                            <option value="" disabled="disabled">Select option</option>
+                            <option value="GF-Room1">GF-Room1</option>
+                            <option value="GF-Room2">GF-Room2</option>
+                            <option value="GF-Store">GF-Store</option>
+                            <option value="Production Area">Production Area</option>              
+                            <option value="FF-Room1" selected="selected">FF-Room1</option>
+                            <option value="FF-Room2">FF-Room2</option>
+                            <option value="FF-Room3">FF-Room3</option>
+                            <option value="FF-Room4">FF-Room4</option>
+                            <option value="Others">Others</option>
+
+                            <%} else if(results[0].location=="FF-Room2"){%>
+                              <option value="" disabled="disabled">Select option</option>
+                              <option value="GF-Room1">GF-Room1</option>
+                              <option value="GF-Room2">GF-Room2</option>
+                              <option value="GF-Store">GF-Store</option>
+                              <option value="Production Area">Production Area</option>              
+                              <option value="FF-Room1">FF-Room1</option>
+                              <option value="FF-Room2" selected="selected">FF-Room2</option>
+                              <option value="FF-Room3">FF-Room3</option>
+                              <option value="FF-Room4">FF-Room4</option>
+                              <option value="Others">Others</option>
+
+                              <%} else if(results[0].location=="FF-Room3"){%>
+                                <option value="" disabled="disabled">Select option</option>
+                                <option value="GF-Room1">GF-Room1</option>
+                                <option value="GF-Room2">GF-Room2</option>
+                                <option value="GF-Store">GF-Store</option>
+                                <option value="Production Area">Production Area</option>              
+                                <option value="FF-Room1">FF-Room1</option>
+                                <option value="FF-Room2">FF-Room2</option>
+                                <option value="FF-Room3" selected="selected">FF-Room3</option>
+                                <option value="FF-Room4">FF-Room4</option>
+                                <option value="Others">Others</option>
+
+                                <%} else if(results[0].location=="FF-Room4"){%>
+                                  <option value="" disabled="disabled">Select option</option>
+                                  <option value="GF-Room1">GF-Room1</option>
+                                  <option value="GF-Room2">GF-Room2</option>
+                                  <option value="GF-Store">GF-Store</option>
+                                  <option value="Production Area">Production Area</option>              
+                                  <option value="FF-Room1">FF-Room1</option>
+                                  <option value="FF-Room2">FF-Room2</option>
+                                  <option value="FF-Room3">FF-Room3</option>
+                                  <option value="FF-Room4" selected="selected">FF-Room4</option>
+                                  <option value="Others">Others</option>
+
+                                  <%} else if(results[0].location=="Others"){%>
+                                    <option value="" disabled="disabled">Select option</option>
+                                    <option value="GF-Room1">GF-Room1</option>
+                                    <option value="GF-Room2">GF-Room2</option>
+                                    <option value="GF-Store">GF-Store</option>
+                                    <option value="Production Area">Production Area</option>              
+                                    <option value="FF-Room1">FF-Room1</option>
+                                    <option value="FF-Room2">FF-Room2</option>
+                                    <option value="FF-Room3">FF-Room3</option>
+                                    <option value="FF-Room4">FF-Room4</option>
+                                    <option value="Others" selected="selected">Others</option>
+                                    <%}%>
+
+                  </select>
+                 
+              
+            <br>
+
+
               Remarks : <br>
               <textarea id="remarks" name="remarks" rows="4" cols="50" placeholder="name, exp date..."><%=results[0].remark%></textarea>
                 <br>
