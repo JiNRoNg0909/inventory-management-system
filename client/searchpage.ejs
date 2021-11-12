@@ -91,7 +91,7 @@
             <form name="" action="searchItem" method ="post">
              
            
-                Item ID :<input type="text" id="itemID" name="itemID" onchange="passValue()" placeholder="itemID"  /><br>
+                Item ID :<input type="text" id="itemID" name="itemID" placeholder="Type 'all' if want to search all"  /><br>
                 Category :
                                
                 <label class="select" for="slct">
@@ -101,11 +101,17 @@
                       <option value="Security, Health & Safety Items">Security, Health & Safety Items</option>
                       <option value="Office Equipment">Office Equipment</option>
                       <option value="Computers & Accessories">Computers & Accessories</option>              
-                      <option value="Machines & Tools">Machines & Tools</option>
+                      <option value="Machines">Machines</option>
+                      <option value="Tools">Tools</option>
+                      <option value="Spare Part">Spare Part</option>
+                      <option value="Merchandise">Merchandise</option>
                     </select>
                    
                 
               <br>
+              Brand : <br>
+              <textarea id="brand" name="brand" rows="1" cols="50" placeholder="brand"></textarea>
+                <br>
               Location :
                                
                 <label class="select" for="slct">
@@ -151,6 +157,8 @@
               <th>ItemID</th>
               <th>Category</th>
               <th>Location</th>
+              <th>Brand</th>
+              <th>Description</th>
               <th>Remark</th>
               <th>User</th>
               <th>Date time</th>
@@ -167,7 +175,9 @@
                 
                 <td name="itemID"><%=results[i].itemid%></td>
                 <td name="category"><%=results[i].category%></td>
-                <td name="category"><%=results[i].location%></td>
+                <td name="location"><%=results[i].location%></td>
+                <td name="brand"><%=results[i].brand%></td>
+                <td name="description"><%=results[i].description%></td>
                 <td name="remarks"><%=results[i].remark%></td>
                 <td name="userid"><%=results[i].userid%></td>
                 <td name="datetime"><%=results[i].datetime%></td>

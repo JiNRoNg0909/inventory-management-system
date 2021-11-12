@@ -186,9 +186,11 @@ app.post('/insertItem', function(request, response) {
 	var selectCategory = request.body.category;
 	var selectLocation = request.body.location;
 	var remark = request.body.remarks;
+	var brand = request.body.brand;
+	var description = request.body.description;
 	
 
-		con.query("INSERT INTO iteminfo VALUES (?,?,?,?,?,?);", [itemid, selectCategory,remark,request.session.userid,datetimeF,selectLocation], function(error, results, fields) {	
+		con.query("INSERT INTO iteminfo VALUES (?,?,?,?,?,?,?,?);", [itemid, selectCategory,remark,request.session.userid,datetimeF,selectLocation,brand,description], function(error, results, fields) {	
 		if (error) {
 		
 		request.flash('error', 'Something Wrong');
@@ -216,8 +218,43 @@ app.post('/searchItem', function(request, response) {
 	var itemid = request.body.itemID;
 	var selectCategory = request.body.category;
 	var selectLocation = request.body.location;
+	var brand = request.body.brand;
 	
-		con.query('SELECT * FROM iteminfo WHERE itemid = ? or category = ? or location =?', [itemid, selectCategory,selectLocation], function(error, results, fields) {	
+	
+
+	if (itemid == "all"){
+		con.query('SELECT * FROM iteminfo', function(error, results, fields) {	
+			if (error) throw error;
+			
+				if (results.length > 0) {
+					
+					
+				//	var userid = results[0].userid;
+				//	var job = results[0].job;
+					
+					
+					request.session.resultspass = results;
+					request.flash('results', results);
+					response.redirect('searchinfo');
+	
+				//	response.render(path.join(__dirname + '/client/searchpage.ejs'), {
+				//		results: results,
+				//		userid: request.session.userid,
+				//		job: request.session.job
+				//	});
+	
+				}
+				else{
+						response.redirect('searchinfo');
+					}
+							
+				
+				response.end();
+			});
+	}
+else{
+
+		con.query('SELECT * FROM iteminfo WHERE itemid = ? or category = ? or location =? or brand =?', [itemid, selectCategory,selectLocation,brand], function(error, results, fields) {	
 		if (error) throw error;
 		
 			if (results.length > 0) {
@@ -245,15 +282,13 @@ app.post('/searchItem', function(request, response) {
 			
 			response.end();
 		});
-
+	}
 });
 
 
 app.post('/passtoUpdate', function(request, response) {
 	var itemid = request.body.itemid;
-	var selectCategory = request.body.category;
-	var selectLocation = request.body.location;
-	var remark = request.body.remarks;
+	
 	
 	
 	con.query('SELECT * FROM iteminfo WHERE itemid = ?', [itemid], function(error, results, fields) {	
@@ -285,8 +320,10 @@ app.post('/updateItem', function(request, response) {
 	var selectLocation = request.body.location;
 	var remark = request.body.remarks;
 	var user = request.session.userid;
+	var brand = request.body.brand;
+	var description = request.body.description;
 	
-	con.query('update iteminfo set category=?, remark=?, userid=?, datetime=?, location=? where itemid=?', [selectCategory, remark, user, datetimeF, selectLocation, itemid], function(error, results, fields) {	
+	con.query('update iteminfo set category=?, remark=?, userid=?, datetime=?, location=?, brand=?, description=? where itemid=?', [selectCategory, remark, user, datetimeF, selectLocation, itemid,brand,description], function(error, results, fields) {	
 		if (error) throw error;
 		
 			if (results.affectedRows > 0) {
@@ -493,7 +530,7 @@ app.post('/printexcel', function(request, response) {
 				ws.getCell('A7').value = "INVENTORY LIST  -  TOKIMEKU PRECISION ENGINEERING";
 				ws.getCell('A7').font ={bold:true, size:16, underline:true};
 
-				ws.getRow(9).values = ['Item', 'Description', 'Location', 'Remarks'];
+				ws.getRow(9).values = ['No', 'ItemID', 'Category', 'Description','Location','Brand', 'Remarks'];
 				ws.getRow(9).font = { bold: true,size:15 };
 				
 				var borderStyles = {
@@ -516,17 +553,20 @@ app.post('/printexcel', function(request, response) {
 				
 
 				ws.columns = [
-					{ key: 'Item',width:10,border:true},
-					{ key: 'Description',width:30},
+					{ key: 'No',width:10,border:true},
+					{ key: 'ItemID',width:30},
+					{ key: 'Category', width:30},
+					{ key: 'Description',width:35},
 					{ key: 'Location', width:30},
-					{ key: 'Remarks',width:30}
+					{ key: 'Brand', width:30},
+					{ key: 'Remarks', width:35}
 					];
 
 				var k=10;
 				for(var i = 1; i<=results.length; i++){
 					
 					
-					ws.addRow({Item: i, Description: results[i-1].itemid, Location: results[i-1].location, Remarks: results[i-1].remark});				
+					ws.addRow({No: i, ItemID: results[i-1].itemid, Category: results[i-1].category, Description: results[i-1].description, Location: results[i-1].location, Brand: results[i-1].brand, Remarks: results[i-1].remark});				
 					ws.getRow(k).eachCell({ includeEmpty: false }, function(row, rowNumber) {
 						row.border = borderStyles;
 											  
@@ -542,7 +582,7 @@ app.post('/printexcel', function(request, response) {
 				// response headers
 				response.set({
 				  'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-				  'Content-Disposition': `attachment; filename="newdatatest.xlsx"`,
+				  'Content-Disposition': `attachment; filename="InventoryList.xlsx"`,
 				});
 				
 				// write into response
