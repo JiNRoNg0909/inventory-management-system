@@ -323,7 +323,8 @@ app.post('/updateItem', function(request, response) {
 	var brand = request.body.brand;
 	var description = request.body.description;
 	
-	con.query('update iteminfo set category=?, remark=?, userid=?, datetime=?, location=?, brand=?, description=? where itemid=?', [selectCategory, remark, user, datetimeF, selectLocation, itemid,brand,description], function(error, results, fields) {	
+
+	con.query('update iteminfo set category=?, remark=?, userid=?, datetime=?, location=?, brand=?, description=? where itemid=?', [selectCategory, remark, user, datetimeF, selectLocation, brand, description, itemid], function(error, results, fields) {	
 		if (error) throw error;
 		
 			if (results.affectedRows > 0) {
