@@ -69,6 +69,17 @@ input[type=text] {
   border-radius: 4px;
   box-sizing: border-box;
 }
+
+input[type=number] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
 input[type=button] {
   width: 100%;
   background-color: #5aa9c9;
@@ -431,3 +442,6 @@ textarea{
   margin: 18px
 }
 
+.setgreycolor{
+  background-color: #c1c6d1;
+}

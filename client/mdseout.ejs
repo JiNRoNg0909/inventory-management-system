@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet" href="/addpage.css" type="text/css" />
+
+ <!-- Boxicons CDN Link -->
+ <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+ <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" 
+ crossorigin="anonymous"/>
+
+<title>Merchandise Out</title>
+
+</head>
+<style>
+.sidebar .bx-log-out:hover{
+  color: red;
+}
+
+</style>
+
+
+
+<body>
+
+ <div class="sidebar">
+    <div class="logo-details">
+       <i class='bx bxs-label icon'></i>
+        <div class="logo_name">WMS</div>
+        <i class='bx bx-menu' id="btn" ></i>
+    </div>
+    <ul class="nav-list">
+   
+        <li>
+            <a href="addinfo">
+              <i class='bx bxs-add-to-queue'></i>
+              <span class="links_name">Asset Add</span>
+            </a>
+             <span class="tooltip">Asset Add</span>
+          </li>
+    
+    
+    <li>
+            <a href="searchinfo">
+              <i class='bx bx-search-alt' ></i>
+              <span class="links_name">Asset Search</span>
+            </a>
+             <span class="tooltip">Asset Search</span>
+          </li>
+    
+          <li>
+            <a href="mdseadd">
+              <i class='bx bxs-folder-plus'></i>
+              <span class="links_name">Add Merchandise</span>
+            </a>
+             <span class="tooltip">Add Merchandise</span>
+          </li>
+    
+          <li>
+            <a href="mdseout">
+              <i class='bx bxs-folder-minus' ></i>
+              <span class="links_name">Merchandise Out</span>
+            </a>
+             <span class="tooltip">Merchandise Out</span>
+          </li>
+
+
+       <li class="profile">
+        <div class="profile-details">
+          <!--<img src="profile.jpg" alt="profileImg">-->
+          <div class="name_job">
+            <div class="name"><%=userid%></div>
+            <div class="job"><%=job%></div>
+          </div>
+        </div>
+        <i class='bx bx-log-out' onclick="location.href ='index.html';" id="log_out" ></i>
+    </li>
+
+    </ul>
+  </div>
+
+
+  <section class="home-section">
+     
+      <div class="topnav">
+        <a class="floatleft" href="homepage">
+                    <img src="https://cdn.shopify.com/s/files/1/0467/8660/9318/files/Tokimeku_Tag_Tokimeku_Logo_480x480.png?v=1620028225" class="paddingimg" alt="tokimeku" style="width:200px;height:75px;">
+                  </a>
+
+        <p class="floatleft">Merchandise Out</p>
+    
+        </div>
+        
+        <% if(message.length > 0){ %>
+          <div class="alertmessage">
+           <p> <%=message%></p>
+          </div>
+        <%}%>
+        <% if(error.length > 0){ %>
+          <div class="alerterror">
+           <p> <%=error%></p>
+          </div>
+        <%}%>
+        <div class="container">
+            <% if(results.length > 0){
+                
+                %>
+            <form name="" action="updateMDSE" method ="post">
+                Item :<input type="text" name="item" class="setgreycolor" value="<%=results[0].item%>" readonly /><br>
+                Batch :<input type="text" name="batch" class="setgreycolor" value="<%=results[0].batch%>" readonly /><br>
+                Quantity Remain:<input type="number"  class="setgreycolor" name="qtyremain" value="<%=results[0].quantity%>" readonly /><br>
+                Quantity Use :<input type="number" name="qty" placeholder="Quantity.." required min="1" max="<%=results[0].quantity%>"/><br>
+                Brand : <input type="text"  class="setgreycolor" name="brand" readonly value="<%=results[0].brand%>" /><br>
+                Remarks : <br>
+                <textarea id="remarks"  class="setgreycolor" name="remarks" rows="4" cols="50"  readonly><%=results[0].remark%></textarea>
+                  <br>
+                <input type="submit" value="Submit">
+
+             </form>
+<%} else{%>
+    <form name="" action="searchMDSE" method ="post">
+                
+        Batch :<input type="text" name="batch" placeholder="Enter batch" required /><br>
+              
+        <input type="submit" value="Submit">
+
+     </form>
+<%}%>
+                   
+             
+               
+                <form name="" action="homepage" method ="get">
+                  <input type="submit" value="Back">
+                  </form>
+
+
+        </div>
+  </section>
+
+</body>
+
+<script>
+let sidebar = document.querySelector(".sidebar");
+let closeBtn = document.querySelector("#btn");
+let searchBtn = document.querySelector(".bx-search");
+
+closeBtn.addEventListener("click", ()=>{
+  sidebar.classList.toggle("open");
+  menuBtnChange();//calling the function(optional)
+});
+
+searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
+  sidebar.classList.toggle("open");
+  menuBtnChange(); //calling the function(optional)
+});
+
+// following are the code to change sidebar button(optional)
+function menuBtnChange() {
+ if(sidebar.classList.contains("open")){
+   closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+ }else {
+   closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
+ }
+}
+
+
+</script>
+
+
+
+
+</html>

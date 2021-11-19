@@ -9,9 +9,9 @@ var mime = require('mime');
 var exceljs = require('exceljs');
 
 var dateTime = require('node-datetime');
-const { write } = require('fs');
 var dt = dateTime.create();
-var datetimeF = dt.format('YmdHMS');
+var datetimeF = dt.format('Y-m-d H:M:S');
+var dateF = dt.format('Ymd');
 
 db_config = {
 	host: "tpe.c5h4fcntitgg.ap-southeast-1.rds.amazonaws.com",
@@ -133,10 +133,21 @@ app.get('/deleteinfo', function(request, response) {
 	});
 });
 
-app.get('/downloadinfo', function(request, response) {
+app.get('/mdseadd', function(request, response) {
 	
 	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
-	response.render(path.join(__dirname + '/client/downloadinfo.ejs'), {
+	response.render(path.join(__dirname + '/client/mdseadd.ejs'), {
+		error: request.flash('error'),
+		message : request.flash('message'),
+		userid: request.session.userid,
+		job: request.session.job
+	});
+});
+
+app.get('/mdseout', function(request, response) {
+	
+	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
+	response.render(path.join(__dirname + '/client/mdseout.ejs'), {
 		error: request.flash('error'),
 		message : request.flash('message'),
 		results: request.flash('results'),
@@ -144,8 +155,6 @@ app.get('/downloadinfo', function(request, response) {
 		job: request.session.job
 	});
 });
-
-
 
 app.post('/auth', function(request, response) {
 	var username = request.body.username;
@@ -189,7 +198,6 @@ app.post('/insertItem', function(request, response) {
 	var brand = request.body.brand;
 	var description = request.body.description;
 	
-
 		con.query("INSERT INTO iteminfo VALUES (?,?,?,?,?,?,?,?);", [itemid, selectCategory,remark,request.session.userid,datetimeF,selectLocation,brand,description], function(error, results, fields) {	
 		if (error) {
 		
@@ -223,7 +231,7 @@ app.post('/searchItem', function(request, response) {
 	
 
 	if (itemid == "all"){
-		con.query('SELECT * FROM iteminfo', function(error, results, fields) {	
+		con.query('SELECT * FROM iteminfo ORDER BY location;', function(error, results, fields) {	
 			if (error) throw error;
 			
 				if (results.length > 0) {
@@ -399,6 +407,143 @@ app.post('/deleteItem', function(request, response) {
 		});
 
 });
+app.post('/insertMDSE', function(request, response) {
+	var itemid = request.body.itemID;
+	var batch = request.body.batch;
+	var quantity = request.body.qty;
+	var remark = request.body.remarks;
+	var brand = request.body.brand;
+	var location = request.body.location;
+
+		con.query("INSERT INTO merchandisein VALUES (?,?,?,?,?,?,?,?);", [itemid, batch,quantity,location,brand,remark,datetimeF,request.session.userid], function(error, results, fields) {	
+		if (error) {
+		
+		request.flash('error', 'Something Wrong');
+		response.redirect('mdseadd');
+		console.log("before");
+		//throw error;
+		}
+		else{
+
+			if (results.affectedRows > 0) {
+				request.flash('message', 'Saved Successfully');
+				response.redirect('mdseadd');			
+			} else {
+				request.flash('error', 'Something Wrong');
+				response.redirect('mdseadd');
+				console.log("before");
+			}			
+
+		}
+
+			response.end();
+		});
+
+});
+
+app.post('/searchMDSE', function(request, response) {
+	var batch = request.body.batch;
+	
+
+		con.query("SELECT * FROM merchandisein where batch=?;", [batch], function(error, results, fields) {	
+			if (error) throw error;
+		
+			if (results.length > 0) {
+				
+				request.flash('results', results);
+				response.redirect('mdseout');
+
+			
+
+			}
+			else{
+					response.redirect('mdseout');
+				}
+
+			response.end();
+		});
+
+});
+
+app.post('/updateMDSE', function(request, response) {
+	var item = request.body.item;
+	var batch = request.body.batch;
+	var quantity = request.body.qty;
+	var quantityremain = request.body.qtyremain;
+	var quantityF = quantityremain - quantity;
+
+	if (quantityF == "0"){
+		con.query('insert into merchandiseout VALUES (?,?,?,?,?);', [item, batch, quantity, datetimeF, request.session.userid], function(error, results, fields) {	
+			if (error) throw error;
+			
+			if (results.affectedRows > 0) {
+				con.query('delete from merchandisein where batch=?;', [batch], function(error, results, fields) {	
+					if (error) throw error;
+					if (results.affectedRows > 0) {
+				
+				
+						request.flash('message', "Save Successfully");
+						response.redirect('mdseout');
+		
+					
+		
+					}
+					else {
+						request.flash('error', 'Something Wrong');
+						response.redirect('mdseout');
+					}		
+
+				});
+				
+			}
+			else {
+				request.flash('error', 'Something Wrong');
+				response.redirect('mdseout');
+			}				
+				
+			//	response.end();
+			});
+
+	}
+
+
+else{
+	con.query('update merchandisein set quantity=? where batch=?', [quantityF, batch], function(error, results, fields) {	
+		if (error) throw error;
+		
+			if (results.affectedRows > 0) {
+				con.query('insert into merchandiseout VALUES (?,?,?,?,?);', [item, batch, quantity, datetimeF, request.session.userid], function(error, results, fields) {	
+					if (error) throw error;
+					if (results.affectedRows > 0) {
+				
+				
+						request.flash('message', "Save Successfully");
+						response.redirect('mdseout');
+		
+					
+		
+					}
+					else {
+						request.flash('error', 'Something Wrong');
+						response.redirect('mdseout');
+					}		
+
+				});
+
+			}
+			else {
+				request.flash('error', 'Something Wrong');
+				response.redirect('mdseout');
+			}		
+						
+			
+			//response.end();
+		});
+
+	}
+
+});
+
 
 /*
 app.post('/printexcel', function(request, response) {
@@ -576,14 +721,14 @@ app.post('/printexcel', function(request, response) {
 
 				}
 			
-				ws.getCell("A"+ (k+15)).value = "SYSTEM GENERATED";
-				ws.getCell("A"+ (k+15)).font ={bold:true, size:16};
+				ws.getCell("A"+ (k+5)).value = "SYSTEM GENERATED";
+				ws.getCell("A"+ (k+5)).font ={bold:true, size:16};
 
 
 				// response headers
 				response.set({
 				  'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-				  'Content-Disposition': `attachment; filename="InventoryList.xlsx"`,
+				  'Content-Disposition': "attachment; filename=InventoryList_" +dateF + ".xlsx" ,
 				});
 				
 				// write into response
