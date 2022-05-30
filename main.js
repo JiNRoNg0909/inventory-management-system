@@ -12,10 +12,10 @@ var datetimeF = dt.format('Y-m-d H:M:S');
 var dateF = dt.format('Ymd');
 
 db_config = {
-	host: "tpe.c5h4fcntitgg.ap-southeast-1.rds.amazonaws.com",
-  user: "admin",
-  password: "adminadmin",
-  database: "tpewms",
+  host: "",
+  user: "",
+  password: "",
+  database: "",
   port: 3306
 }
 
