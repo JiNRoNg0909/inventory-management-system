@@ -23,60 +23,7 @@
 
 <body>
 
- <div class="sidebar">
-    <div class="logo-details">
-       <i class='bx bxs-label icon'></i>
-        <div class="logo_name">WMS</div>
-        <i class='bx bx-menu' id="btn" ></i>
-    </div>
-    <ul class="nav-list">
-   
-        <li>
-            <a href="addinfo">
-              <i class='bx bxs-add-to-queue'></i>
-              <span class="links_name">Asset Add</span>
-            </a>
-             <span class="tooltip">Asset Add</span>
-          </li>
-    
-    
-    <li>
-            <a href="searchinfo">
-              <i class='bx bx-search-alt' ></i>
-              <span class="links_name">Asset Search</span>
-            </a>
-             <span class="tooltip">Asset Search</span>
-          </li>
-    
-          <li>
-            <a href="mdseadd">
-              <i class='bx bxs-folder-plus'></i>
-              <span class="links_name">Add Merchandise</span>
-            </a>
-             <span class="tooltip">Add Merchandise</span>
-          </li>
-    
-          <li>
-            <a href="mdseout">
-              <i class='bx bxs-folder-minus' ></i>
-              <span class="links_name">Merchandise Out</span>
-            </a>
-             <span class="tooltip">Merchandise Out</span>
-          </li>
-
-       <li class="profile">
-        <div class="profile-details">
-          <!--<img src="profile.jpg" alt="profileImg">-->
-          <div class="name_job">
-            <div class="name"><%=userid%></div>
-            <div class="job"><%=job%></div>
-          </div>
-        </div>
-        <i class='bx bx-log-out' onclick="location.href ='index.html';" id="log_out" ></i>
-    </li>
-
-    </ul>
-  </div>
+  <%- include('header'); -%>
 
 
   <section class="home-section">
@@ -150,34 +97,6 @@
   </section>
 
 </body>
-
-<script>
-let sidebar = document.querySelector(".sidebar");
-let closeBtn = document.querySelector("#btn");
-let searchBtn = document.querySelector(".bx-search");
-
-closeBtn.addEventListener("click", ()=>{
-  sidebar.classList.toggle("open");
-  menuBtnChange();//calling the function(optional)
-});
-
-searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
-  sidebar.classList.toggle("open");
-  menuBtnChange(); //calling the function(optional)
-});
-
-// following are the code to change sidebar button(optional)
-function menuBtnChange() {
- if(sidebar.classList.contains("open")){
-   closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
- }else {
-   closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
- }
-}
-
-
-</script>
-
 
 
 

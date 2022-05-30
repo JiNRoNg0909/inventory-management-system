@@ -4,8 +4,6 @@ var express = require('express');
 var path = require('path');
 var session = require('express-session');
 var flash = require('connect-flash');
-var xlsx = require('xlsx');
-var mime = require('mime');
 var exceljs = require('exceljs');
 
 var dateTime = require('node-datetime');
@@ -85,8 +83,7 @@ app.get('/homepage', function(request, response) {
 	
 });
 
-
-
+// add info and pass message, error, userid and job
 app.get('/addinfo', function(request, response) {
 	
 	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
@@ -97,6 +94,8 @@ app.get('/addinfo', function(request, response) {
 		job: request.session.job
 	});
 });
+
+// update info and pass message, error, userid and job, results
 app.get('/updateinfo', function(request, response) {
 	
 	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
@@ -109,6 +108,7 @@ app.get('/updateinfo', function(request, response) {
 	});
 });
 
+// search info and pass message, error, userid and job, results
 app.get('/searchinfo', function(request, response) {
 	
 	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
@@ -121,6 +121,7 @@ app.get('/searchinfo', function(request, response) {
 	});
 });
 
+// delete info and pass message, error, userid and job, results
 app.get('/deleteinfo', function(request, response) {
 	
 	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
@@ -155,6 +156,19 @@ app.get('/mdseout', function(request, response) {
 		job: request.session.job
 	});
 });
+
+app.get('/productivitypage', function(request, response) {
+	
+	//response.sendFile(path.join(__dirname + '/client/homepage.html'));
+	response.render(path.join(__dirname + '/client/productivity.ejs'), {
+		error: request.flash('error'),
+		message : request.flash('message'),
+		results: request.flash('results'),
+		userid: request.session.userid,
+		job: request.session.job
+	});
+});
+
 
 app.post('/auth', function(request, response) {
 	var username = request.body.username;
@@ -739,9 +753,66 @@ app.post('/printexcel', function(request, response) {
 			
 		});
 
+app.post('/passtoDelete', function(request, response) {
+	var itemid = request.body.itemid;
+	
+	
+	con.query('SELECT * FROM iteminfo WHERE itemid = ?', [itemid], function(error, results, fields) {	
+		if (error) throw error;
+		
+			if (results.length > 0) {
+				
+				
+				request.flash('results', results);
+				response.redirect('deleteinfo');
 
+			
 
+			}
+			else{
+					response.redirect('deleteinfo');
+				}
+						
+			
+			response.end();
+		});
 
+});
+
+app.get('/productivity', function(request, response) {
+	
+	con.query('SELECT item, quantity FROM merchandisein', function(error, results, fields) {	
+		if (error) throw error;
+		
+			if (results.length > 0) {
+				
+				
+				response.render(path.join(__dirname + '/client/productivity.ejs'), {
+					error: request.flash('error'),
+					message : request.flash('message'),
+					results:results,
+					userid: request.session.userid,
+					job: request.session.job
+				});
+
+			
+
+			}
+			else{
+				response.render(path.join(__dirname + '/client/productivity.ejs'), {
+					error: request.flash('error'),
+					message : request.flash('message'),
+					userid: request.session.userid,
+					job: request.session.job
+				});
+				}
+						
+			
+			response.end();
+		});
+	
+	
+});
 
 
 

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="stylesheet" href="/addpage.css" type="text/css" />
+
+ <!-- Boxicons CDN Link -->
+ <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+ <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" 
+ crossorigin="anonymous"/>
+ <script
+ src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+ </script>
+<title>Merchandise add Item</title>
+
+</head>
+<style>
+.sidebar .bx-log-out:hover{
+  color: red;
+}
+
+</style>
+
+
+
+<body>
+
+  <%- include('header'); -%>
+
+
+  <section class="home-section">
+     
+      <div class="topnav">
+        <a class="floatleft" href="homepage">
+                    <img src="https://cdn.shopify.com/s/files/1/0467/8660/9318/files/Tokimeku_Tag_Tokimeku_Logo_480x480.png?v=1620028225" class="paddingimg" alt="tokimeku" style="width:200px;height:75px;">
+                  </a>
+
+        <p class="floatleft">Productivity</p>
+    
+        </div>
+        
+        <% if(message.length > 0){ %>
+          <div class="alertmessage">
+           <p> <%=message%></p>
+          </div>
+        <%}%>
+        <% if(error.length > 0){ %>
+          <div class="alerterror">
+           <p> <%=error%></p>
+          </div>
+        <%}%>
+        <div class="container">
+           <%
+         
+           var itemname = [];
+           for(var i=0; i<results.length; i++){
+               itemname.push(results[i].item);
+               console.log(results[i].item);
+           }
+        
+           %>
+            <canvas id="myChart"></canvas>
+           <canvas id="meschart"></canvas>
+        </div>
+  </section>
+
+</body>
+
+<script>
+    var getitemane = "<%=itemname%>";
+    var namearr = [];
+    var resultname = getitemane.split(',');
+
+    resultname.forEach(element => {
+        namearr.push(element);
+    });
+
+
+    const data = {
+  labels: namearr,
+  datasets: [{
+    label: 'My 123Dataset',
+    data: [300, 50],
+    backgroundColor: [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      
+    ],
+    hoverOffset: 10
+  }]
+};
+
+    const ctx = document.getElementById('myChart').getContext("2d");
+    const myChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+       
+    });
+    </script>
+
+
+
+</html>
